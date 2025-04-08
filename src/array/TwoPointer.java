@@ -233,6 +233,26 @@ public class TwoPointer {
 //    }
 
 
+    public void moveZeroes(int[] nums) {
+        //用一个指针指向插入位，一个指针指向遍历位
+        int insertIdx = 0, iterIdx = 0;
+        while (iterIdx < nums.length) {
+            //如果是0，不操作
+            if (nums[iterIdx] == 0) {
+
+            } else {
+                //如果非零，把遍历位的数字插入到插入位，并移动插入位
+                nums[insertIdx] = nums[iterIdx];
+                insertIdx++;
+            }
+            iterIdx++;
+        }
+        while (insertIdx < nums.length) {
+            nums[insertIdx] = 0;
+            insertIdx++;
+        }
+    }
+
     @Test
     public void test() {
     }

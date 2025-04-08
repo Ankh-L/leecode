@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * @author linyw
  */
-public class main {
+public class Main {
     public ListNode removeElements(ListNode head, int val) {
         if (head == null) {
             return head;
@@ -25,16 +25,28 @@ public class main {
     }
 
     public ListNode reverseList(ListNode head) {
-        ListNode cur = head;
-        ListNode pre = null;
-        while (cur != null) {
-            ListNode temp = cur.next;
-            cur.next = pre;
-            pre = cur;
-            cur = temp;
-        }
-        return pre;
+        return reverse(head, null);
+
     }
+
+    /**
+     * 反转两个节点， 并返回新的头节点
+     * @param cur
+     * @param pre
+     * @return
+     */
+    private ListNode reverse(ListNode cur, ListNode pre) {
+        //先定义退出条件
+        if (cur == null) {
+            return pre;
+        } else {
+            ListNode next = cur.next;
+            cur.next = pre;
+            return reverse(next, cur);
+        }
+    }
+
+
     public ListNode removeNthFromEnd(ListNode head, int n) {
         //先遍历到tail节点，测量链表长度
         int length = 0;
@@ -59,28 +71,15 @@ public class main {
         }
     }
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-        //求链表长度
-        int lengthA = getLength(headA);
-        int lengthB = getLength(headB);
-        if (lengthA < lengthB) {
-            ListNode temp = headB;
-            headB = headA;
-            headA = temp;
-        }
-        int dif = Math.abs(lengthA - lengthB);
-        while (dif > 0) {
-            headA = headA.next;
-            dif--;
-        }
-        while (headA != null) {
-            if (headA == headB) {
-                return headA;
-            } else {
-                headA = headA.next;
-                headB = headB.next;
+        //双指针，让两个指针分别从头出发，走到尾部后进入另个一链表的头部
+        ListNode nodeA = headA,nodeB = headB;
+        while(true) {
+            if (nodeA == nodeB) {
+                return nodeA;
             }
+            nodeA = nodeA == null ? headB : nodeA.next;
+            nodeB = nodeB == null ? headA : nodeB.next;
         }
-        return null;
     }
 
     /**
@@ -144,7 +143,6 @@ public class main {
         }
         return null;
     }
-
 }
 
   class ListNode {

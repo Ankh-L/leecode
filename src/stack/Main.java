@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * @author linyw
  */
-public class main {
+public class Main {
 
     class MyQueue {
         Stack<Integer> stack1;
