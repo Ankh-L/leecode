@@ -608,6 +608,124 @@ public class Tree {
         return new Entity(b, cur);
     }
 
+    public TreeNode insertIntoBST(TreeNode root, int val) {
+        if (root == null) {
+            return new TreeNode(val);
+        }
+        inorderTraversal4(root, val);
+        return root;
+    }
+
+    private TreeNode inorderTraversal4(TreeNode cur, int val) {
+        //退出条件，找到空节点
+        if (cur == null) {
+            return new TreeNode(val);
+        }
+        if (cur.val < val) {
+            cur.right = inorderTraversal4(cur.right, val);
+        } else if (cur.val > val) {
+            cur.left = inorderTraversal4(cur.left, val);
+        }
+        return cur;
+    }
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        return searchAndDelete(root, key);
+    }
+
+    private TreeNode searchAndDelete(TreeNode cur, int key) {
+        if (cur == null) {
+            return null;
+        }
+        //只讨论目标节点的状态
+        if (cur.val == key) {
+            //如果cur是叶子节点
+            if (cur.left == null && cur.right == null) {
+                return null;
+            } else if (cur.left == null){
+                //只有左
+                return cur.right;
+            } else if (cur.right == null) {
+                //只有右
+                return cur.left;
+            } else {
+                //左右都有
+                TreeNode targetRight = cur.right;
+                if (targetRight.left == null) {
+                    targetRight.left = cur.left;
+                } else {
+                    TreeNode leaf = targetRight.left;
+                    while (leaf.left != null) {
+                        leaf = leaf.left;
+                    }
+                    leaf.left = cur.left;
+                }
+                return targetRight;
+            }
+        }
+        if (cur.val > key) {
+            cur.left = searchAndDelete(cur.left, key);
+        } else {
+            cur.right = searchAndDelete(cur.right, key);
+        }
+        return cur;
+    }
+
+
+
+    public TreeNode trimBST(TreeNode root, int low, int high) {
+        return doTrimBst(root, low, high);
+    }
+
+    private TreeNode doTrimBst(TreeNode cur, int low, int high) {
+        if (cur == null) {
+            return null;
+        }
+        //讨论当前节点对范围的几种可能
+        //1.当前节点的值小于左边界，返回它修剪过的右子树
+        if (cur.val < low) {
+            return doTrimBst(cur.right, low, high);
+        } else if (cur.val == low) {
+            //2.当前节点的值等于左边界
+            //左子树切掉，递归右子树
+            cur.left = null;
+            cur.right = doTrimBst(cur.right, low, high);
+            return cur;
+        } else if (cur.val < high) {
+            //3。当前节点的值大于左边界小于右边界
+            cur.left = doTrimBst(cur.left, low, high);
+            cur.right = doTrimBst(cur.right, low, high);
+            return cur;
+        } else if (cur.val == high) {
+            //4.当前节点的值等于右边界
+            cur.right = null;
+            cur.left = doTrimBst(cur.left, low, high);
+            return cur;
+        } else {
+            //5. 当前节点的值大于右边界
+            return doTrimBst(cur.left, low, high);
+        }
+    }
+
+
+    public TreeNode sortedArrayToBST(int[] nums) {
+        return doSortedArrayToBST(nums, 0, nums.length -1);//0， 4
+    }
+
+    private TreeNode doSortedArrayToBST(int[] nums, int begin, int end) {
+        //nums = [-10,-3,0,5,9]
+        //退出逻辑
+        if (begin > end) {
+            return null;
+        }
+        //单层逻辑
+        int mid = (begin + end) / 2;
+        TreeNode root = new TreeNode(nums[mid]);
+        root.left = doSortedArrayToBST(nums, begin, mid - 1);
+        root.right = doSortedArrayToBST(nums, mid + 1, end);
+        return root;
+    }
+
     @Test
     public void fff() {
         int[] inorder = new int[]{9, 3, 15, 20, 7};
